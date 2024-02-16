@@ -5,11 +5,12 @@ import PainMap from "./app/components/PainMap";
 import SignUpScreen from "./app/screens/SignUpScreen";
 import Screen from "./app/components/Screen";
 import SettingsScreen from "./app/screens/SettingsScreen";
+import DailyFibroTrack from "./app/screens/DailyFibroTrack";
 
 export default function App() {
   return (
     <Screen>
-      <SettingsScreen />
+      <DailyFibroTrack />
     </Screen>
   );
 }
