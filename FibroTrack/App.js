@@ -2,35 +2,47 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Screen from "./app/components/Screen";
 import SymptomGraph from "./app/components/SymptomGraph";
+import AppGraph from "./app/components/AppGraph";
+import PainMap from "./app/components/PainMap";
 
 const sampleData = {
-  headache: {
-    "2024-02-10": 2,
-    "2024-02-11": 3,
-    "2024-02-12": 4,
-    "2024-02-13": 5,
-    "2024-02-14": 2,
-    "2024-02-15": 0,
-    "2024-02-16": 3,
-  },
-  nausea: {
-    "2024-02-10": 1,
-    "2024-02-11": 2,
-    "2024-02-12": 0,
-    "2024-02-13": 0,
-    "2024-02-14": 1,
-    "2024-02-15": 3,
-    "2024-02-16": 2,
-  },
+  "2024-01-01": 3,
+  "2024-01-02": 2,
+  "2024-01-03": 4,
+  "2024-01-04": 5,
+  "2024-01-05": 1,
+  "2024-01-06": 1,
+  "2024-01-07": 3,
+  "2024-01-08": 1,
+  "2024-01-09": 4,
+  "2024-01-10": 5,
+  "2024-01-11": 1,
+  "2024-01-12": 2,
+  "2024-01-13": 4,
+  "2024-01-14": 3,
+  "2024-01-15": 4,
+  "2024-01-16": 5,
+  "2024-01-17": 2,
+  "2024-01-18": 3,
+  "2024-01-19": 4,
+  "2024-01-20": 5,
+  "2024-01-21": 4,
+  "2024-01-22": 3,
+  "2024-01-23": 1,
+  "2024-01-24": 2,
+  "2024-01-25": 5,
+  "2024-01-26": 5,
+  "2024-01-27": 4,
+  "2024-01-28": 3,
+  "2024-01-29": 4,
+  "2024-01-30": 5,
+  "2024-01-31": 2,
 };
+
 export default function App() {
   return (
     <Screen>
-      <SymptomGraph data={sampleData} symptom="headache" />
-
-      {/* You can add more SymptomGraph components for different symptoms here */}
-      {/* Example for Nausea */}
-      <SymptomGraph data={sampleData} symptom="nausea" />
+      <PainMap />
     </Screen>
   );
 }
