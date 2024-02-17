@@ -1,9 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import Screen from "./app/components/Screen";
-import SymptomGraph from "./app/components/SymptomGraph";
 import AppGraph from "./app/components/AppGraph";
 import PainMap from "./app/components/PainMap";
+import AppDropDown from "./app/components/AppDropDown";
+import AppGraphs from "./app/components/AppGraphs";
 
 const sampleData = {
   "2024-01-01": 3,
@@ -42,7 +43,7 @@ const sampleData = {
 export default function App() {
   return (
     <Screen>
-      <AppGraph symptomData={sampleData} />
+      <AppGraphs symptomData={sampleData} />
     </Screen>
   );
 }
