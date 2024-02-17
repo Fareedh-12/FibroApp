@@ -11,7 +11,6 @@ export default AppText;
 const styles = StyleSheet.create({
   text: {
     color: colors.black,
-    // fontFamily: 'manrope',
     fontSize: 16,
     fontWeight: "500",
     paddingVertical: 15,

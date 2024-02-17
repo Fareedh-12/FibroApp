@@ -18,7 +18,6 @@ export default AppHeading;
 
 const styles = StyleSheet.create({
   heading: {
-    fontFamily: "Manrope", // Ensure the font is correctly linked in your project
     fontWeight: "bold",
     color: colors.black,
     textShadowColor: "rgba(0, 0, 0, 0.1)", // Subtle shadow for depth

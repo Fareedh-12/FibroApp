@@ -5,6 +5,7 @@ import AppGraph from "./app/components/AppGraph";
 import PainMap from "./app/components/PainMap";
 import AppDropDown from "./app/components/AppDropDown";
 import AppGraphs from "./app/components/AppGraphs";
+import MyFibroChartScreen from "./app/screens/MyFibroChartScreen";
 
 const sampleData = {
   "2024-01-01": 3,
@@ -43,7 +44,7 @@ const sampleData = {
 export default function App() {
   return (
     <Screen>
-      <AppGraphs symptomData={sampleData} />
+      <MyFibroChartScreen symptomData={sampleData} />
     </Screen>
   );
 }
