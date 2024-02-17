@@ -11,18 +11,56 @@ import {
 import { AntDesign } from "@expo/vector-icons";
 import colors from "../config/colors";
 
-// Generates data for 7 days from a given start date
-const generateDataForSevenDays = (startDate) => {
-  return [...Array(7).keys()].map((i) => {
-    const d = new Date(startDate);
-    d.setDate(d.getDate() + i);
-    return {
-      date: `${d.getMonth() + 1}/${d.getDate()}`,
-      severity: Math.floor(Math.random() * 6), // Example: random severity
-    };
-  });
+const sampleData = {
+  "2024-01-01": 3,
+  "2024-01-02": 2,
+  "2024-01-03": 4,
+  "2024-01-04": 5,
+  "2024-01-05": 1,
+  "2024-01-06": 1,
+  "2024-01-07": 3,
+  "2024-01-08": 1,
+  "2024-01-09": 4,
+  "2024-01-10": 5,
+  "2024-01-11": 1,
+  "2024-01-12": 2,
+  "2024-01-13": 4,
+  "2024-01-14": 3,
+  "2024-01-15": 4,
+  "2024-01-16": 5,
+  "2024-01-17": 2,
+  "2024-01-18": 3,
+  "2024-01-19": 4,
+  "2024-01-20": 5,
+  "2024-01-21": 4,
+  "2024-01-22": 3,
+  "2024-01-23": 1,
+  "2024-01-24": 2,
+  "2024-01-25": 5,
+  "2024-01-26": 5,
+  "2024-01-27": 4,
+  "2024-01-28": 3,
+  "2024-01-29": 4,
+  "2024-01-30": 5,
+  "2024-01-31": 2,
 };
 
+// Adjusted function to get data from symptomData based on the startDate
+const getDataForSevenDays = (startDate, symptomData) => {
+  let data = [];
+  for (let i = 0; i < 7; i++) {
+    const date = new Date(startDate);
+    date.setDate(date.getDate() + i);
+    const dateString = date.toISOString().split("T")[0]; // Format as 'YYYY-MM-DD'
+    if (symptomData[dateString] !== undefined) {
+      data.push({
+        date: `${date.getMonth() + 1}/${date.getDate()}`,
+        severity: symptomData[dateString],
+      });
+    }
+  }
+  return data;
+};
 const severityLabels = [
   "Absent",
   "Slight",
@@ -32,10 +70,10 @@ const severityLabels = [
   "Critical",
 ];
 
-const AppGraph = () => {
+const AppGraph = ({ symptomData }) => {
   const [startDate, setStartDate] = useState(new Date());
 
-  const data = generateDataForSevenDays(startDate);
+  const data = getDataForSevenDays(startDate, symptomData);
 
   const shiftDateRange = (days) => {
     const newStartDate = new Date(startDate);
@@ -43,17 +81,15 @@ const AppGraph = () => {
     setStartDate(newStartDate);
   };
 
-  // Function to format the displayed date range
   const formatDateRange = () => {
     const start = new Date(startDate);
     const end = new Date(startDate);
-    end.setDate(end.getDate() + 6); // Last day of the 7-day range
+    end.setDate(end.getDate() + 6); // Adjust for 7-day range
     return `${start.getMonth() + 1}/${start.getDate()} - ${
       end.getMonth() + 1
     }/${end.getDate()}`;
   };
 
-  // Check if the end date is after the current date
   const isEndDateAfterToday = () => {
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + 6);
@@ -147,14 +183,13 @@ export default AppGraph;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#f5fcff",
+    paddingVertical: 20,
   },
   navigationContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
-    marginBottom: 20,
   },
 });

@@ -42,7 +42,7 @@ const sampleData = {
 export default function App() {
   return (
     <Screen>
-      <PainMap />
+      <AppGraph symptomData={sampleData} />
     </Screen>
   );
 }
