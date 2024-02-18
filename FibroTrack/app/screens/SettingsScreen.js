@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,20 +8,27 @@ import {
   Alert,
 } from "react-native";
 import AppHeader from "../components/AppHeader";
+import AuthContext from "../auth/context";
+import { signOutUser } from "../api/auth";
 
 // Assuming you have a function to handle sign out
-// import { signOut } from '../api/auth';
 
 const SettingsScreen = () => {
-  // const { user } = useAuth(); // Access user data from context
+  const { user, setUser } = useContext(AuthContext);
 
   // Access user data, fallback to defaults if not available
-  const username = "Username";
-  const userImage = "https://via.placeholder.com/150";
+  const username = user?.name || "User";
+  const userImage = user?.image || "https://i.imgur.com/6Iw3v3R.jpg";
 
-  const handleSignOut = () => {
-    // Your sign-out logic here
-    Alert.alert("Sign Out", "User signed out successfully.");
+  const handleSignOut = async () => {
+    const result = await signOutUser();
+    if (result.ok) {
+      setUser(null); // Update context/state to reflect the user has signed out
+      Alert.alert("Signed Out", "You have been signed out successfully.");
+    } else {
+      // Handle sign out errors
+      Alert.alert("Sign Out Failed", result.error);
+    }
   };
 
   return (

@@ -28,6 +28,7 @@ const LoginScreen = () => {
   const [loginFailed, setLoginFailed] = useState(false);
 
   const handleSubmit = async (loginInfo) => {
+    console.log(loginInfo);
     const { email, password } = loginInfo;
     const result = await signIn({ email, password });
     if (!result.ok) {

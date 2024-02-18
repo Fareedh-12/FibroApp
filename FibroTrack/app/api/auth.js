@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
+  signOut,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
@@ -44,5 +45,14 @@ const signIn = async ({ email, password }) => {
     return { ok: false, error: error.message };
   }
 };
-// Export both functions in a single object
-export { signUp, signIn };
+
+const signOutUser = async () => {
+  try {
+    await signOut(auth);
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error.message };
+  }
+};
+
+export { signUp, signIn, signOutUser };
