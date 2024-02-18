@@ -1,16 +1,18 @@
-// Import the required functions from Firebase SDK
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
-export const signUp = async ({ email, password, username }) => {
+
+const signUp = async ({ email, password, username }) => {
   try {
-    // Create user with email and password
     const userCredential = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
-
     const user = userCredential.user;
 
     // Update the user's profile with the username
@@ -18,7 +20,7 @@ export const signUp = async ({ email, password, username }) => {
       displayName: username,
     });
 
-    // Save the user's profile in Firestore
+    // Uncomment the following line if you want to save the user's profile in Firestore
     // await setDoc(doc(db, "users", user.uid), {
     //   username,
     //   email,
@@ -29,3 +31,18 @@ export const signUp = async ({ email, password, username }) => {
     throw error; // Rethrow the error to be handled where the function is called
   }
 };
+
+const signIn = async ({ email, password }) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return { ok: true, data: userCredential.user };
+  } catch (error) {
+    return { ok: false, error: error.message };
+  }
+};
+// Export both functions in a single object
+export { signUp, signIn };

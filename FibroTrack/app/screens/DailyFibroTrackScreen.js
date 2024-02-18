@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { NativeBaseProvider } from "native-base";
 
 import AppHeader from "../components/AppHeader";
 import AppButton from "../components/AppButton";
 import SymptomComponent from "../components/SymptomComponent";
 import AppCalendar from "../components/AppCalendar";
 import AppCheckBox from "../components/AppCheckBox";
+import PainMap from "../components/PainMap";
 import colors from "../config/colors";
 
 const initialSymptoms = [
@@ -66,6 +68,7 @@ const DailyFibroTrackScreen = () => {
             <ScrollView>
               {symptoms.map((symptom, index) => (
                 <AppCheckBox
+                  key={symptom.id || index} // Preferably use symptom.id if available
                   text={symptom.name}
                   value={symptom.name}
                   onValueChange={() => handleCheckboxToggle(index)}
@@ -73,6 +76,7 @@ const DailyFibroTrackScreen = () => {
                 />
               ))}
             </ScrollView>
+
             <AppButton text="Done" onPress={toggleModal} />
           </View>
         </View>
@@ -89,7 +93,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   symptomsScrollContainer: {
-    maxHeight: 500,
+    maxHeight: 800,
   },
   modalBackdrop: {
     flex: 1,

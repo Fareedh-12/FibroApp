@@ -1,36 +1,29 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  TextInput,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import colors from "../config/colors";
-import SymptomSliderComponent from "./SympomSliderComponent";
+import PainMap from "./PainMap"; // Ensure this path is correct
+import SymptomSliderComponent from "./SymptomSliderComponent";
 
 const SymptomComponent = (props) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [symptomData, setSymptomData] = useState({});
-  const currentDate = new Date().toISOString().split("T")[0];
-
-  const handleSymptomChange = (symptom, value) => {
-    setSymptomData((prevData) => ({
-      ...prevData,
-      [currentDate]: {
-        ...prevData[currentDate],
-        [symptom]: value,
-      },
-    }));
-  };
-
-  useEffect(() => {
-    console.log(symptomData);
-  }, [symptomData]);
 
   const handlePress = () => {
     setIsExpanded(!isExpanded);
+  };
+
+  // Determine which component to render based on the symptom
+  const renderComponentBasedOnSymptom = () => {
+    if (props.symptom === "Pain") {
+      return <PainMap />;
+    } else {
+      return (
+        <SymptomSliderComponent
+          symptom={props.symptom}
+          onValueChange={(value) => console.log(value)} // Implement your own onValueChange logic
+        />
+      );
+    }
   };
 
   return (
@@ -45,10 +38,7 @@ const SymptomComponent = (props) => {
       </TouchableOpacity>
       {isExpanded && (
         <View style={styles.inputContainer}>
-          <SymptomSliderComponent
-            symptom={props.symptom}
-            onValueChange={handleSymptomChange}
-          />
+          {renderComponentBasedOnSymptom()}
         </View>
       )}
     </View>
@@ -85,12 +75,5 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     padding: 15,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: colors.light,
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
   },
 });

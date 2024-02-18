@@ -12,8 +12,8 @@ const AppNavigator = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarLabelStyle: { fontSize: 15, paddingBottom: 0 },
-        tabBarStyle: { paddingBottom: 3 },
+        tabBarLabelStyle: { fontSize: 15 },
+        tabBarStyle: { paddingTop: 15, height: 60 },
       }}
     >
       <Tab.Screen

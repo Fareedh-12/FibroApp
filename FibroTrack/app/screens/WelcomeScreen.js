@@ -9,7 +9,9 @@ export default function WelcomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.textContainer}>
-        <AppHeading style={styles.heading}>FibroTrack</AppHeading>
+        <AppHeading style={styles.heading} size={40}>
+          FibroTrack
+        </AppHeading>
         <AppText>
           Navigating Fibromyalgia Together: Connect, Heal, Thrive
         </AppText>

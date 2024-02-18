@@ -1,14 +1,21 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext, useState } from "react";
 import * as Yup from "yup";
 
 import AppHeading from "../components/AppHeading";
 import AppButton from "../components/AppButton";
 import AppCheckBox from "../components/AppCheckBox";
-import { AppForm, AppFormField, AppSubmitButton } from "../components/forms";
+import {
+  AppForm,
+  AppFormField,
+  AppSubmitButton,
+  ErrorMessage,
+} from "../components/forms";
 
 import colors from "../config/colors";
 import { useNavigation } from "@react-navigation/native";
+import { signIn } from "../api/auth";
+import AuthContext from "../auth/context";
 
 validationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -16,6 +23,23 @@ validationSchema = Yup.object().shape({
 });
 
 const LoginScreen = () => {
+  const authContext = useContext(AuthContext);
+
+  const [loginFailed, setLoginFailed] = useState(false);
+
+  const handleSubmit = async (loginInfo) => {
+    const { email, password } = loginInfo;
+    const result = await signIn({ email, password });
+    if (!result.ok) {
+      setLoginFailed(true);
+      console.error(result.error);
+      return;
+    }
+
+    setLoginFailed(false);
+    authContext.setUser(result.data);
+  };
+
   return (
     <View style={styles.container}>
       <View style={{ marginTop: 30 }}>
@@ -24,12 +48,14 @@ const LoginScreen = () => {
 
       <AppForm
         initialValues={{ email: "", password: "" }}
-        onSubmit={(values) => {
-          console.log(values);
-        }}
+        onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
         <View style={styles.loginForm}>
+          <ErrorMessage
+            error="Invalid email or password."
+            visible={loginFailed}
+          />
           <AppFormField
             name="email"
             autoCapitalize="none"
