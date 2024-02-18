@@ -1,34 +1,37 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
 import React, { useState, useEffect } from "react";
-import Screen from "./app/components/Screen";
-import DailyFibroTrackScreen from "./app/screens/DailyFibroTrackScreen";
-import GettingStartedScreen from "./app/screens/GettingStartedScreen";
-import LoginScreen from "./app/screens/LoginScreen";
-import PainMap from "./app/components/PainMap";
-import WelcomeScreen from "./app/screens/WelcomeScreen";
-import { NativeBaseProvider } from "native-base";
-import AuthNavigator from "./app/navigation/AuthNavigator";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebaseConfig";
+
+import Screen from "./app/components/Screen";
+import GettingStartedScreen from "./app/screens/GettingStartedScreen";
+import AuthNavigator from "./app/navigation/AuthNavigator";
 import AuthContext from "./app/auth/context";
 import navigationTheme from "./app/navigation/navigationTheme";
 import AppNavigator from "./app/navigation/AppNavigator";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebaseConfig";
+import * as SplashScreen from "expo-splash-screen";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [user, setUser] = useState();
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (authenticatedUser) => {
+      if (authenticatedUser) {
+        setUser(authenticatedUser);
+        // Optionally, check if it's the user's first time and update state accordingly
       } else {
         setUser(null);
       }
+      // Once everything is ready, hide the splash screen
+      console.log("Hiding splash screen");
+      SplashScreen.hideAsync();
     });
-    return unsubscribe;
+
+    return unsubscribe; // Unsubscribe on component unmount
   }, []);
 
   return (
