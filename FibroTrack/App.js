@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Screen from "./app/components/Screen";
 import DailyFibroTrackScreen from "./app/screens/DailyFibroTrackScreen";
 import GettingStartedScreen from "./app/screens/GettingStartedScreen";
@@ -13,10 +13,23 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthContext from "./app/auth/context";
 import navigationTheme from "./app/navigation/navigationTheme";
 import AppNavigator from "./app/navigation/AppNavigator";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebaseConfig";
 
 export default function App() {
   const [user, setUser] = useState();
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <AuthContext.Provider
