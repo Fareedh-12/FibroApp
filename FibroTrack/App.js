@@ -16,10 +16,24 @@ import AppNavigator from "./app/navigation/AppNavigator";
 
 export default function App() {
   const [user, setUser] = useState();
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider
+      value={{ user, setUser, isFirstTimeUser, setIsFirstTimeUser }}
+    >
       <NavigationContainer theme={navigationTheme}>
-        <Screen>{user ? <AppNavigator /> : <AuthNavigator />}</Screen>
+        <Screen>
+          {user ? (
+            isFirstTimeUser ? (
+              <GettingStartedScreen />
+            ) : (
+              <AppNavigator />
+            )
+          ) : (
+            <AuthNavigator />
+          )}
+        </Screen>
       </NavigationContainer>
     </AuthContext.Provider>
   );
