@@ -30,6 +30,7 @@ const AppCalendar = () => {
     const today = new Date();
     setCurrentMonth(today.getMonth());
     setCurrentYear(today.getFullYear());
+    setSelectedDate(today);
 
     // Calculate the offset to scroll to
     const dayIndex = today.getDate() - 1; // Index of today's date in the dates array
