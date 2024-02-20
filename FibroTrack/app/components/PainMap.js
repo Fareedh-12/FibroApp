@@ -1,10 +1,18 @@
-import { StyleSheet, Text, View, Button } from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, View, Button } from "react-native";
+import React, { useState, useEffect, useContext } from "react";
 import Body from "react-native-body-highlighter";
+import AuthContext from "../auth/context";
+import SelectedDateContext from "../date/context";
+import {
+  updateOrCreatePainData,
+  fetchPainDataForDate,
+} from "../api/symptomService";
 
 const PainMap = () => {
   const [viewSide, setViewSide] = useState("front");
   const [data, setData] = useState([]);
+  const { user } = useContext(AuthContext);
+  const { selectedDate } = useContext(SelectedDateContext);
 
   // Define the colors array outside the component if it doesn't change, or keep it inside if it does
   const colors = [
@@ -14,9 +22,26 @@ const PainMap = () => {
     "#FF0000", // Severe Pain
   ];
 
-  const handleBodyPartPress = (bodyPart) => {
-    console.log("Body part touched:", bodyPart.slug);
+  useEffect(() => {
+    if (user && selectedDate) {
+      const loadPainData = async () => {
+        try {
+          const fetchedData = await fetchPainDataForDate(
+            user.uid,
+            selectedDate
+          );
+          setData(fetchedData);
+        } catch (error) {
+          Alert.alert("Error", "Failed to load pain data.");
+          console.error(error);
+        }
+      };
 
+      loadPainData();
+    }
+  }, [selectedDate, user]);
+
+  const handleBodyPartPress = (bodyPart) => {
     // Check if the body part is already in the data
     const existingPartIndex = data.findIndex(
       (item) => item.slug === bodyPart.slug
@@ -48,10 +73,25 @@ const PainMap = () => {
     setData(newData);
   };
 
+  const handleSave = async () => {
+    if (user) {
+      try {
+        await updateOrCreatePainData(user.uid, selectedDate, data);
+        alert("Pain data saved successfully!");
+      } catch (error) {
+        alert("Failed to save pain data. Please try again.");
+        console.error(error);
+      }
+    } else {
+      alert("You must be logged in to save data.");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.buttonContainer}>
         <Button title="Front" onPress={() => setViewSide("front")} />
+        <Button title="Save" onPress={handleSave} />
         <Button title="Back" onPress={() => setViewSide("back")} />
       </View>
       <Body

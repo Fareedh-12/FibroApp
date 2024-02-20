@@ -73,7 +73,6 @@ const AppCalendar = () => {
     // Scroll to the start of the month
     scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
   };
-  console.log("Selected Date: ", selectedDate);
 
   const renderDate = (date) => {
     const isSelected = selectedDate.toDateString() === date.toDateString();

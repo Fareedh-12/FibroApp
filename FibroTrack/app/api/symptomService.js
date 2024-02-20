@@ -81,25 +81,6 @@ const fetchSymptomIntensityForDay = async (userId, symptomName, date) => {
   }
 };
 
-const saveSymptomData = async (userId, symptom, value, date) => {
-  const dateStr = date.toISOString().split("T")[0];
-  const symptomData = {
-    [symptom]: value,
-    date: dateStr,
-    updatedAt: new Date(),
-  };
-
-  try {
-    await setDoc(doc(db, `users/${userId}/symptoms`, dateStr), symptomData, {
-      merge: true,
-    });
-    console.log("Symptom data saved successfully.");
-  } catch (error) {
-    console.error("Error saving symptom data:", error);
-    throw new Error("Failed to save symptom data.");
-  }
-};
-
 const updateOrCreateSymptomData = async (userId, symptom, intensity, date) => {
   const dateStr = date.toISOString().split("T")[0]; // Format the date as YYYY-MM-DD
   // Adjust the path to point to the entries subcollection for a given symptom
@@ -124,10 +105,44 @@ const updateOrCreateSymptomData = async (userId, symptom, intensity, date) => {
   }
 };
 
+const updateOrCreatePainData = async (userId, selectedDate, painData) => {
+  const dateStr = selectedDate.toISOString().split("T")[0];
+  const docRef = doc(db, `users/${userId}/symptoms/Pain/entries`, dateStr);
+
+  try {
+    const docSnap = await getDoc(docRef);
+    let newData = { date: dateStr, painMap: painData, updatedAt: new Date() };
+
+    await setDoc(docRef, newData, { merge: true });
+    console.log("Pain data updated/created successfully.");
+  } catch (error) {
+    console.error("Error updating pain data:", error);
+    throw new Error("Failed to update pain data.");
+  }
+};
+
+const fetchPainDataForDate = async (userId, date) => {
+  const dateStr = date.toISOString().split("T")[0];
+  const docRef = doc(db, `users/${userId}/symptoms/Pain/entries`, dateStr);
+
+  try {
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      // Return the data if the document exists
+      return docSnap.data().painMap; // Ensure this matches the structure you're saving
+    }
+    return []; // Return an empty array if no data exists for the date
+  } catch (error) {
+    console.error("Error fetching pain data:", error);
+    throw new Error("Failed to fetch pain data.");
+  }
+};
+
 export {
-  saveSymptomData,
   initializeUserSymptoms,
   fetchUserSymptoms,
   fetchSymptomIntensityForDay,
   updateOrCreateSymptomData,
+  updateOrCreatePainData,
+  fetchPainDataForDate,
 };
