@@ -4,7 +4,7 @@ import AppDropDown from "./AppDropDown";
 import AppGraph from "./AppGraph";
 
 const AppGraphs = ({ data }) => {
-  const [selectedSymptom, setSelectedSymptom] = useState("");
+  const [selectedSymptom, setSelectedSymptom] = useState([]);
   useEffect(() => {
     if (Object.keys(data).length > 0) {
       setSelectedSymptom(Object.keys(data)[0]);

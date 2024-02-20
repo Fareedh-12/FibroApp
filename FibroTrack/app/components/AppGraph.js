@@ -69,6 +69,8 @@ const AppGraph = ({ symptomData }) => {
     return `${formatDate(start)} - ${formatDate(endDate)}`;
   };
 
+  console.log(symptomData);
+
   return (
     <View style={styles.container}>
       <IconNavigation

@@ -12,6 +12,7 @@ import AuthContext from "./app/auth/context";
 import navigationTheme from "./app/navigation/navigationTheme";
 import AppNavigator from "./app/navigation/AppNavigator";
 import * as SplashScreen from "expo-splash-screen";
+import Tryout from "./app/components/Tryout";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,6 +41,9 @@ export default function App() {
     <AuthContext.Provider
       value={{ user, setUser, isFirstTimeUser, setIsFirstTimeUser }}
     >
+      {/* <SelectedDateContext.Provider value={selectedDate}>
+        <Tryout></Tryout>
+      </SelectedDateContext.Provider> */}
       <NavigationContainer theme={navigationTheme}>
         <Screen>
           {user ? (

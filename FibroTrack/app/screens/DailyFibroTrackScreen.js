@@ -22,7 +22,7 @@ import colors from "../config/colors";
 
 const DailyFibroTrackScreen = () => {
   const [symptoms, setSymptoms] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+
   const [isModalVisible, setIsModalVisible] = useState(false);
   const authContext = useContext(AuthContext);
   const { user } = authContext;
@@ -45,56 +45,49 @@ const DailyFibroTrackScreen = () => {
   };
 
   return (
-    <SelectedDateContext.Provider value={{ selectedDate, setSelectedDate }}>
-      <SymptomContext.Provider value={{ symptoms, setSymptoms }}>
-        <View style={styles.container}>
-          <AppHeader />
-          <AppCalendar />
-          <ScrollView style={styles.symptomsScrollContainer}>
-            {symptoms
-              .filter((s) => s.visible)
-              .map((symptom, index) => (
-                <SymptomComponent key={symptom.name} symptom={symptom.name} />
+    <View style={styles.container}>
+      <AppHeader />
+      <AppCalendar />
+      <ScrollView style={styles.symptomsScrollContainer}>
+        {symptoms
+          .filter((s) => s.visible)
+          .map((symptom, index) => (
+            <SymptomComponent key={symptom.name} symptom={symptom.name} />
+          ))}
+      </ScrollView>
+      <TouchableOpacity style={styles.buttonContainer} onPress={toggleModal}>
+        <MaterialIcons
+          name="dashboard-customize"
+          size={40}
+          color={colors.dark}
+        />
+      </TouchableOpacity>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={toggleModal}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.modalView}>
+            <ScrollView>
+              {symptoms.map((symptom, index) => (
+                <AppCheckBox
+                  key={symptom.id || index} // Preferably use symptom.id if available
+                  text={symptom.name}
+                  value={symptom.name}
+                  onValueChange={() => handleCheckboxToggle(index)}
+                  isChecked={symptom.visible}
+                />
               ))}
-          </ScrollView>
-          <TouchableOpacity
-            style={styles.buttonContainer}
-            onPress={toggleModal}
-          >
-            <MaterialIcons
-              name="dashboard-customize"
-              size={40}
-              color={colors.dark}
-            />
-          </TouchableOpacity>
+            </ScrollView>
 
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={isModalVisible}
-            onRequestClose={toggleModal}
-          >
-            <View style={styles.modalBackdrop}>
-              <View style={styles.modalView}>
-                <ScrollView>
-                  {symptoms.map((symptom, index) => (
-                    <AppCheckBox
-                      key={symptom.id || index} // Preferably use symptom.id if available
-                      text={symptom.name}
-                      value={symptom.name}
-                      onValueChange={() => handleCheckboxToggle(index)}
-                      isChecked={symptom.visible}
-                    />
-                  ))}
-                </ScrollView>
-
-                <AppButton text="Done" onPress={toggleModal} />
-              </View>
-            </View>
-          </Modal>
+            <AppButton text="Done" onPress={toggleModal} />
+          </View>
         </View>
-      </SymptomContext.Provider>
-    </SelectedDateContext.Provider>
+      </Modal>
+    </View>
   );
 };
 
