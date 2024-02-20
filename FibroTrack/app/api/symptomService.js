@@ -200,7 +200,6 @@ const fetchSymptomsData = async (userId, year, month) => {
       symptomData[symptom] = {}; // Keeping as an empty object if no entries found
     }
   }
-  console.log(symptomData);
 
   return symptomData;
 };

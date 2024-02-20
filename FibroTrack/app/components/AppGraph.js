@@ -51,11 +51,16 @@ const severityLabels = [
   "Critical",
 ];
 
-const AppGraph = ({ symptomData = {} }) => {
+const AppGraph = ({
+  symptomData = {},
+  communityData = {},
+  showCommunityData,
+}) => {
   const [endDate, setEndDate] = useState(new Date());
 
   // Adjust the function to map data to the fixed set of week days
   const data = mapDataToWeekDays(endDate, symptomData);
+  const communityDataMapped = mapDataToWeekDays(endDate, communityData);
 
   const shiftDateRange = (days) => {
     const newEndDate = new Date(endDate);
@@ -76,7 +81,7 @@ const AppGraph = ({ symptomData = {} }) => {
         onRightClick={() => shiftDateRange(7)}
         centerText={formatDateRange()}
       />
-      <VictoryChart width={350} theme={VictoryTheme.material}>
+      <VictoryChart width={400} theme={VictoryTheme.material}>
         <VictoryAxis
           tickValues={[1, 2, 3, 4, 5, 6, 7]}
           tickFormat={getWeekDays(endDate)}
@@ -97,6 +102,7 @@ const AppGraph = ({ symptomData = {} }) => {
           style={{ data: { stroke: "#c43a31" } }}
           animate={{ duration: 2000, onLoad: { duration: 1000 } }}
         />
+
         <VictoryScatter
           data={data.filter((d) => d.severity !== null)}
           x="date"
@@ -106,6 +112,26 @@ const AppGraph = ({ symptomData = {} }) => {
             data: { fill: "#c43a31", stroke: "#ffffff", strokeWidth: 2 },
           }}
         />
+        {showCommunityData && (
+          <VictoryLine
+            data={communityDataMapped}
+            x="date"
+            y={(datum) => (datum.severity !== null ? datum.severity : 0)}
+            style={{ data: { stroke: "#30a3e6" } }} // Different color for community data
+            animate={{ duration: 2000, onLoad: { duration: 1000 } }}
+          />
+        )}
+        {showCommunityData && (
+          <VictoryScatter
+            data={communityDataMapped.filter((d) => d.severity !== null)}
+            x="date"
+            y="severity"
+            size={7}
+            style={{
+              data: { fill: "#30a3e6", stroke: "#ffffff", strokeWidth: 2 }, // Match community line color, with white stroke
+            }}
+          />
+        )}
       </VictoryChart>
     </View>
   );

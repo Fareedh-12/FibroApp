@@ -26,7 +26,6 @@ const Tryout = () => {
 
     fetchData();
   }, [user, selectedDate]);
-  console.log(symptomData);
 
   return (
     <View>
