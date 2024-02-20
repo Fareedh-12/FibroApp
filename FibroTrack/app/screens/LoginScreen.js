@@ -4,7 +4,6 @@ import * as Yup from "yup";
 
 import AppHeading from "../components/AppHeading";
 import AppButton from "../components/AppButton";
-import AppCheckBox from "../components/AppCheckBox";
 import {
   AppForm,
   AppFormField,
@@ -13,7 +12,6 @@ import {
 } from "../components/forms";
 
 import colors from "../config/colors";
-import { useNavigation } from "@react-navigation/native";
 import { signIn } from "../api/auth";
 import AuthContext from "../auth/context";
 
@@ -76,8 +74,6 @@ const LoginScreen = () => {
           />
 
           <View style={styles.optionsContainer}>
-            {/* <AppCheckBox text="Remember Me" /> */}
-
             <Text style={styles.forgotPassword}>Forgot Password?</Text>
           </View>
         </View>

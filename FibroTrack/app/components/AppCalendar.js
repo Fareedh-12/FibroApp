@@ -1,5 +1,6 @@
-import React, { useState, useRef } from "react";
-import Icon from "react-native-vector-icons/FontAwesome"; // Import Icon component
+import React, { useState, useEffect, useRef, useContext } from "react";
+import Icon from "react-native-vector-icons/FontAwesome";
+import SelectedDateContext from "../date/context";
 
 import {
   View,
@@ -11,7 +12,7 @@ import {
 import colors from "../config/colors";
 
 const AppCalendar = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const { selectedDate, setSelectedDate } = useContext(SelectedDateContext);
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
   const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
@@ -27,7 +28,6 @@ const AppCalendar = () => {
   const scrollViewRef = useRef(); // Ref for the ScrollView
   const goToToday = () => {
     const today = new Date();
-    setSelectedDate(today);
     setCurrentMonth(today.getMonth());
     setCurrentYear(today.getFullYear());
 
@@ -40,6 +40,20 @@ const AppCalendar = () => {
   const getDaysInMonth = (month, year) => {
     return new Date(year, month + 1, 0).getDate();
   };
+
+  useEffect(() => {
+    let isMounted = true;
+
+    setTimeout(() => {
+      if (isMounted) {
+        goToToday();
+      }
+    }, 100);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const changeMonth = (delta) => {
     let newMonth = currentMonth + delta;
@@ -59,6 +73,7 @@ const AppCalendar = () => {
     // Scroll to the start of the month
     scrollViewRef.current.scrollTo({ x: 0, y: 0, animated: true });
   };
+  console.log("Selected Date: ", selectedDate);
 
   const renderDate = (date) => {
     const isSelected = selectedDate.toDateString() === date.toDateString();

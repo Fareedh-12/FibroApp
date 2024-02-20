@@ -6,6 +6,7 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../../firebaseConfig";
+import { initializeUserSymptoms } from "./symptomService";
 
 const signUp = async ({ email, password, username }) => {
   try {
@@ -21,14 +22,20 @@ const signUp = async ({ email, password, username }) => {
       displayName: username,
     });
 
-    // Uncomment the following line if you want to save the user's profile in Firestore
-    // await setDoc(doc(db, "users", user.uid), {
-    //   username,
-    //   email,
-    // });
-    console.log("User created:");
+    // Create a user document in Firestore with additional profile details
+    await setDoc(doc(db, "users", user.uid), {
+      email,
+      displayName: username,
+      createdAt: new Date(), // Store the account creation date
+    });
+
+    // Initialize default symptoms for the new user
+    await initializeUserSymptoms(user.uid);
+
+    console.log("User created and default symptoms initialized: ", user);
     return user;
   } catch (error) {
+    console.error("Error in user signup: ", error);
     throw error; // Rethrow the error to be handled where the function is called
   }
 };

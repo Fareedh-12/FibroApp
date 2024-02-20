@@ -17,14 +17,15 @@ const SettingsScreen = () => {
   const { user, setUser } = useContext(AuthContext);
 
   // Access user data, fallback to defaults if not available
-  const username = user?.name || "User";
-  const userImage = user?.image || "https://i.imgur.com/6Iw3v3R.jpg";
+  // Use user data if available, otherwise fallback to defaults
+  const username = user.displayName || "User";
+  const userImage = user.photoURL || "https://i.imgur.com/6Iw3v3R.jpg";
+  const email = user.email || "No email available";
 
   const handleSignOut = async () => {
     const result = await signOutUser();
     if (result.ok) {
       setUser(null); // Update context/state to reflect the user has signed out
-      Alert.alert("Signed Out", "You have been signed out successfully.");
     } else {
       // Handle sign out errors
       Alert.alert("Sign Out Failed", result.error);
@@ -36,7 +37,8 @@ const SettingsScreen = () => {
       <AppHeader />
       <View style={styles.profileContainer}>
         <Image source={{ uri: userImage }} style={styles.profileImage} />
-        <Text style={styles.username}>{username}</Text>
+        <Text style={styles.text}>{username}</Text>
+        <Text style={styles.text}>{email}</Text>
       </View>
 
       <View style={styles.settingsOptions}>
@@ -71,6 +73,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     alignItems: "center",
     marginTop: 50,
+    marginBottom: 30,
   },
   profileImage: {
     width: 150,
@@ -78,9 +81,8 @@ const styles = StyleSheet.create({
     borderRadius: 75,
     marginBottom: 10,
   },
-  username: {
+  text: {
     fontSize: 20,
-    marginBottom: 20, // Space between username and settings options
   },
   settingsOptions: {
     width: "100%", // Take the full container width

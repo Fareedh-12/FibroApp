@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
+import { saveSymptomData } from "../api/symptomService";
+import { fetchSymptomIntensityForDay } from "../api/symptomService";
+import AuthContext from "../auth/context";
+import SelectedDateContext from "../date/context";
 
 const SymptomSliderComponent = ({ symptom, onValueChange }) => {
-  const [sliderValue, setSliderValue] = useState(3); // Start from a neutral value
+  const [sliderValue, setSliderValue] = useState(0); // Start from a neutral value
+  const { selectedDate } = useContext(SelectedDateContext);
+  const { user } = useContext(AuthContext);
 
   const getSliderColor = (value) => {
     const colors = [
@@ -26,11 +32,30 @@ const SymptomSliderComponent = ({ symptom, onValueChange }) => {
     5: "Very Severe",
   };
 
+  useEffect(() => {
+    if (user && selectedDate) {
+      const loadSymptomIntensity = async () => {
+        const intensity = await fetchSymptomIntensityForDay(
+          user.uid,
+          symptom,
+          selectedDate
+        );
+        setSliderValue(intensity);
+      };
+
+      loadSymptomIntensity();
+    }
+  }, [user, symptom, selectedDate]);
+
   // Update the slider value and call the onValueChange
-  const handleValueChange = (value) => {
+  const handleValueChange = async (value) => {
     setSliderValue(value);
-    if (onValueChange) {
-      onValueChange(value);
+    if (user) {
+      try {
+        await saveSymptomData(user.uid, symptom, value, new Date());
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -49,6 +74,7 @@ const SymptomSliderComponent = ({ symptom, onValueChange }) => {
             onValueChange(symptom, value);
           }
         }}
+        onSlidingComplete={user && onValueChange && handleValueChange}
         minimumTrackTintColor={getSliderColor(sliderValue)}
       />
       <Text style={styles.labelText}>{valueDescriptions[sliderValue]}</Text>

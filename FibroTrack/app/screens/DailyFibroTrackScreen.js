@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -7,7 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { fetchUserSymptoms } from "../api/symptomService";
 import { NativeBaseProvider } from "native-base";
+import AuthContext from "../auth/context";
+import SelectedDateContext from "../date/context";
 
 import AppHeader from "../components/AppHeader";
 import AppButton from "../components/AppButton";
@@ -17,18 +20,20 @@ import AppCheckBox from "../components/AppCheckBox";
 import PainMap from "../components/PainMap";
 import colors from "../config/colors";
 
-const initialSymptoms = [
-  { name: "Pain", visible: true },
-  { name: "Fatigue", visible: true },
-  { name: "Mood", visible: true },
-  { name: "Brain Fog", visible: true },
-  { name: "Sleep", visible: true },
-  { name: "Physical Activity", visible: true },
-];
-
 const DailyFibroTrackScreen = () => {
-  const [symptoms, setSymptoms] = useState(initialSymptoms);
+  const [symptoms, setSymptoms] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const authContext = useContext(AuthContext);
+  const { user } = authContext;
+
+  useEffect(() => {
+    if (user) {
+      fetchUserSymptoms(user.uid)
+        .then(setSymptoms)
+        .catch((error) => console.error("Failed to load symptoms:", error));
+    }
+  }, [user]);
 
   const toggleModal = () => setIsModalVisible(!isModalVisible);
 
@@ -39,49 +44,51 @@ const DailyFibroTrackScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <AppHeader />
-      <AppCalendar />
-      <ScrollView style={styles.symptomsScrollContainer}>
-        {symptoms
-          .filter((s) => s.visible)
-          .map((symptom, index) => (
-            <SymptomComponent key={symptom.name} symptom={symptom.name} />
-          ))}
-      </ScrollView>
-      <TouchableOpacity style={styles.buttonContainer} onPress={toggleModal}>
-        <MaterialIcons
-          name="dashboard-customize"
-          size={40}
-          color={colors.dark}
-        />
-      </TouchableOpacity>
+    <SelectedDateContext.Provider value={{ selectedDate, setSelectedDate }}>
+      <View style={styles.container}>
+        <AppHeader />
+        <AppCalendar />
+        <ScrollView style={styles.symptomsScrollContainer}>
+          {symptoms
+            .filter((s) => s.visible)
+            .map((symptom, index) => (
+              <SymptomComponent key={symptom.name} symptom={symptom.name} />
+            ))}
+        </ScrollView>
+        <TouchableOpacity style={styles.buttonContainer} onPress={toggleModal}>
+          <MaterialIcons
+            name="dashboard-customize"
+            size={40}
+            color={colors.dark}
+          />
+        </TouchableOpacity>
 
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={toggleModal}
-      >
-        <View style={styles.modalBackdrop}>
-          <View style={styles.modalView}>
-            <ScrollView>
-              {symptoms.map((symptom, index) => (
-                <AppCheckBox
-                  key={symptom.id || index} // Preferably use symptom.id if available
-                  text={symptom.name}
-                  value={symptom.name}
-                  onValueChange={() => handleCheckboxToggle(index)}
-                  isChecked={symptom.visible}
-                />
-              ))}
-            </ScrollView>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible}
+          onRequestClose={toggleModal}
+        >
+          <View style={styles.modalBackdrop}>
+            <View style={styles.modalView}>
+              <ScrollView>
+                {symptoms.map((symptom, index) => (
+                  <AppCheckBox
+                    key={symptom.id || index} // Preferably use symptom.id if available
+                    text={symptom.name}
+                    value={symptom.name}
+                    onValueChange={() => handleCheckboxToggle(index)}
+                    isChecked={symptom.visible}
+                  />
+                ))}
+              </ScrollView>
 
-            <AppButton text="Done" onPress={toggleModal} />
+              <AppButton text="Done" onPress={toggleModal} />
+            </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+    </SelectedDateContext.Provider>
   );
 };
 
