@@ -8,7 +8,13 @@ import SelectedDateContext from "../date/context";
 import AuthContext from "../auth/context";
 
 symptomData = {
-  Pain: {},
+  Pain: {
+    "2024-01-01": 5,
+    "2024-01-02": 4,
+    "2024-01-03": 3,
+    "2024-01-04": 2,
+    "2024-01-05": 1,
+  },
   Fatigue: {
     "2024-01-01": 4,
     "2024-01-02": 5,

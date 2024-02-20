@@ -51,7 +51,7 @@ const severityLabels = [
   "Critical",
 ];
 
-const AppGraph = ({ symptomData }) => {
+const AppGraph = ({ symptomData = {} }) => {
   const [endDate, setEndDate] = useState(new Date());
 
   // Adjust the function to map data to the fixed set of week days
@@ -68,8 +68,6 @@ const AppGraph = ({ symptomData }) => {
     start.setDate(start.getDate() - 6); // Adjust for 7-day range starting 6 days ago
     return `${formatDate(start)} - ${formatDate(endDate)}`;
   };
-
-  console.log(symptomData);
 
   return (
     <View style={styles.container}>
