@@ -7,6 +7,7 @@ import {
   VictoryTheme,
   VictoryScatter,
 } from "victory-native";
+import IconNavigation from "../navigation/IconNavigation";
 import { AntDesign } from "@expo/vector-icons";
 import colors from "../config/colors";
 
@@ -70,21 +71,11 @@ const AppGraph = ({ symptomData }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.navigationContainer}>
-        <AntDesign
-          name="left"
-          size={20}
-          color={colors.dark}
-          onPress={() => shiftDateRange(-7)}
-        />
-        <Text>{formatDateRange()}</Text>
-        <AntDesign
-          name="right"
-          size={20}
-          color={colors.dark}
-          onPress={() => shiftDateRange(7)}
-        />
-      </View>
+      <IconNavigation
+        onLeftClick={() => shiftDateRange(-7)}
+        onRightClick={() => shiftDateRange(7)}
+        centerText={formatDateRange()}
+      />
       <VictoryChart width={350} theme={VictoryTheme.material}>
         <VictoryAxis
           tickValues={[1, 2, 3, 4, 5, 6, 7]}

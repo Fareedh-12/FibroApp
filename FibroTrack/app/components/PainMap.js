@@ -31,6 +31,7 @@ const PainMap = () => {
             selectedDate
           );
           setData(fetchedData);
+          console.log("Pain data for the date:", fetchedData);
         } catch (error) {
           Alert.alert("Error", "Failed to load pain data.");
           console.error(error);

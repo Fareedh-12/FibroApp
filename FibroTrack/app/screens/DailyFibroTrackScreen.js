@@ -17,7 +17,6 @@ import AppButton from "../components/AppButton";
 import SymptomComponent from "../components/SymptomComponent";
 import AppCalendar from "../components/AppCalendar";
 import AppCheckBox from "../components/AppCheckBox";
-import PainMap from "../components/PainMap";
 import colors from "../config/colors";
 
 const DailyFibroTrackScreen = () => {

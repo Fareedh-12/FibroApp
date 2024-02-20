@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import AppGraphs from "../components/AppGraphs";
 import AppHeader from "../components/AppHeader";
+import PainMapReport from "../components/PainMapReport";
 
 symptomData = {
   Pain: {
@@ -141,8 +142,11 @@ symptomData = {
 const MyFibroChartScreen = () => {
   return (
     <View style={styles.container}>
-      <AppHeader />
-      <AppGraphs data={symptomData} />
+      <ScrollView>
+        <AppHeader />
+        <AppGraphs data={symptomData} />
+        <PainMapReport />
+      </ScrollView>
     </View>
   );
 };

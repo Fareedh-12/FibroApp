@@ -6,6 +6,8 @@ import {
   writeBatch,
   getDocs,
   getDoc,
+  query,
+  where,
 } from "firebase/firestore";
 
 const initializeUserSymptoms = async (userId) => {
@@ -138,6 +140,32 @@ const fetchPainDataForDate = async (userId, date) => {
   }
 };
 
+const fetchPainMapDataForMonth = async (userId, year, month) => {
+  const entriesRef = collection(db, `users/${userId}/symptoms/Pain/entries`);
+
+  try {
+    const querySnapshot = await getDocs(entriesRef);
+    let allEntries = [];
+    querySnapshot.forEach((doc) => {
+      allEntries.push({ id: doc.id, ...doc.data() });
+    });
+
+    // Filter entries by the specified month and year
+    const filteredEntries = allEntries.filter((entry) => {
+      const entryDate = new Date(entry.date);
+      return entryDate.getFullYear() === year && entryDate.getMonth() === month;
+    });
+
+    return filteredEntries;
+  } catch (error) {
+    console.error(
+      "Error fetching pain data entries for the specified month:",
+      error
+    );
+    throw new Error("Failed to fetch pain data.");
+  }
+};
+
 export {
   initializeUserSymptoms,
   fetchUserSymptoms,
@@ -145,4 +173,5 @@ export {
   updateOrCreateSymptomData,
   updateOrCreatePainData,
   fetchPainDataForDate,
+  fetchPainMapDataForMonth,
 };
