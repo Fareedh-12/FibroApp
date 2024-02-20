@@ -3,6 +3,7 @@ import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebaseConfig";
+import SelectedDateContext from "./app/date/context";
 
 import Screen from "./app/components/Screen";
 import GettingStartedScreen from "./app/screens/GettingStartedScreen";
@@ -17,6 +18,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   const [user, setUser] = useState();
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (authenticatedUser) => {
@@ -44,7 +46,11 @@ export default function App() {
             isFirstTimeUser ? (
               <GettingStartedScreen />
             ) : (
-              <AppNavigator />
+              <SelectedDateContext.Provider
+                value={{ selectedDate, setSelectedDate }}
+              >
+                <AppNavigator />
+              </SelectedDateContext.Provider>
             )
           ) : (
             <AuthNavigator />

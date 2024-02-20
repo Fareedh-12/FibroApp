@@ -1,10 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppDropDown from "./AppDropDown";
 import AppGraph from "./AppGraph";
 
 const AppGraphs = ({ data }) => {
-  const [selectedSymptom, setSelectedSymptom] = useState(Object.keys(data)[0]);
+  const [selectedSymptom, setSelectedSymptom] = useState("");
+  useEffect(() => {
+    if (Object.keys(data).length > 0) {
+      setSelectedSymptom(Object.keys(data)[0]);
+    }
+  }, [data]);
+
+  if (Object.keys(data).length === 0) {
+    return <Text>No data available</Text>; // Or any other placeholder content
+  }
 
   return (
     <>

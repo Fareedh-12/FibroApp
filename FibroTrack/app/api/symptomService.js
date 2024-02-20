@@ -166,6 +166,44 @@ const fetchPainMapDataForMonth = async (userId, year, month) => {
   }
 };
 
+const fetchSymptomsData = async (userId, year, month) => {
+  let symptomData = {};
+  const startDate = new Date(year, month, 1);
+  const endDate = new Date(year, month + 1, 0);
+
+  const symptomsRef = collection(db, `users/${userId}/symptoms`);
+  const symptomsSnapshot = await getDocs(symptomsRef);
+  const symptoms = symptomsSnapshot.docs.map((doc) => doc.id);
+
+  for (const symptom of symptoms) {
+    const entriesRef = collection(
+      db,
+      `users/${userId}/symptoms/${symptom}/entries`
+    );
+    // Adjust query to fetch only entries within the specified month
+    const q = query(
+      entriesRef,
+      where("day", ">=", startDate.toISOString().split("T")[0]),
+      where("day", "<=", endDate.toISOString().split("T")[0])
+    );
+    const querySnapshot = await getDocs(q);
+
+    symptomData[symptom] = {};
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      if (data.day && data.intensity !== undefined) {
+        symptomData[symptom][data.day] = data.intensity;
+      }
+    });
+
+    if (Object.keys(symptomData[symptom]).length === 0) {
+      symptomData[symptom] = {}; // Keeping as an empty object if no entries found
+    }
+  }
+
+  return symptomData;
+};
+
 export {
   initializeUserSymptoms,
   fetchUserSymptoms,
@@ -174,4 +212,5 @@ export {
   updateOrCreatePainData,
   fetchPainDataForDate,
   fetchPainMapDataForMonth,
+  fetchSymptomsData,
 };

@@ -59,8 +59,6 @@ const PainMap = () => {
     }
   }, [user, currentMonth, currentYear]); // Dependencies array
 
-  console.log("Pain map data for the month:", averagedMonthData);
-
   const handleMonthChange = (offset) => {
     const newDate = new Date(currentYear, currentMonth + offset);
     setCurrentMonth(newDate.getMonth());

@@ -1,8 +1,11 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import AppGraphs from "../components/AppGraphs";
 import AppHeader from "../components/AppHeader";
 import PainMapReport from "../components/PainMapReport";
+import { fetchSymptomsData } from "../api/symptomService";
+import SelectedDateContext from "../date/context";
+import AuthContext from "../auth/context";
 
 symptomData = {
   Pain: {
@@ -140,11 +143,35 @@ symptomData = {
 };
 
 const MyFibroChartScreen = () => {
+  const { user } = useContext(AuthContext);
+  const { selectedDate } = useContext(SelectedDateContext);
+  const [data, setData] = useState({});
+  const [lastFetchedMonth, setLastFetchedMonth] = useState(null);
+  const [lastFetchedYear, setLastFetchedYear] = useState(null);
+
+  useEffect(() => {
+    const month = selectedDate.getMonth();
+    const year = selectedDate.getFullYear();
+
+    // Check if the month or year has changed
+    if (user && (month !== lastFetchedMonth || year !== lastFetchedYear)) {
+      fetchSymptomsData(user.uid, year, month)
+        .then((fetchedData) => {
+          setData(fetchedData); // Update state with fetched data
+          setLastFetchedMonth(month); // Update the last fetched month
+          setLastFetchedYear(year); // Update the last fetched year
+        })
+        .catch((error) => {
+          console.error("Error fetching symptoms data:", error);
+        });
+    }
+  }, [user, selectedDate, lastFetchedMonth, lastFetchedYear]);
+
   return (
     <View style={styles.container}>
       <ScrollView>
         <AppHeader />
-        <AppGraphs data={symptomData} />
+        <AppGraphs data={data} />
         <PainMapReport />
       </ScrollView>
     </View>
