@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Slider from "@react-native-community/slider";
-import { saveSymptomData } from "../api/symptomService";
+import { updateOrCreateSymptomData } from "../api/symptomService";
 import { fetchSymptomIntensityForDay } from "../api/symptomService";
 import AuthContext from "../auth/context";
 import SelectedDateContext from "../date/context";
@@ -52,9 +52,9 @@ const SymptomSliderComponent = ({ symptom, onValueChange }) => {
     setSliderValue(value);
     if (user) {
       try {
-        await saveSymptomData(user.uid, symptom, value, new Date());
+        await updateOrCreateSymptomData(user.uid, symptom, value, selectedDate);
       } catch (error) {
-        console.error(error);
+        console.error("Failed to update symptom data:", error);
       }
     }
   };

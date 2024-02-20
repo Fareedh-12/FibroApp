@@ -100,29 +100,27 @@ const saveSymptomData = async (userId, symptom, value, date) => {
   }
 };
 
-const updateOrCreateSymptomData = async (userId, symptom, value, date) => {
+const updateOrCreateSymptomData = async (userId, symptom, intensity, date) => {
   const dateStr = date.toISOString().split("T")[0]; // Format the date as YYYY-MM-DD
-  const docRef = doc(db, `users/${userId}/symptoms`, dateStr);
+  // Adjust the path to point to the entries subcollection for a given symptom
+  const entryRef = doc(
+    db,
+    `users/${userId}/symptoms/${symptom}/entries`,
+    dateStr
+  );
 
   try {
-    const docSnap = await getDoc(docRef);
-
-    let newData = { date: dateStr, updatedAt: new Date() };
-
-    if (docSnap.exists()) {
-      // If the document exists, update the specific symptom value
-      newData[symptom] = value;
-      await setDoc(docRef, newData, { merge: true });
-    } else {
-      // If the document does not exist, create a new entry with the symptom data
-      newData[symptoms] = { [symptom]: value };
-      await setDoc(docRef, newData);
-    }
-
-    console.log("Symptom data updated successfully.");
+    const entryData = {
+      day: dateStr,
+      intensity: intensity,
+      updatedAt: new Date(),
+    };
+    // Since each day should have a unique entry, you can directly set the document
+    await setDoc(entryRef, entryData, { merge: true });
+    console.log("Symptom entry updated/created successfully.");
   } catch (error) {
-    console.error("Error updating symptom data:", error);
-    throw new Error("Failed to update symptom data.");
+    console.error("Error updating symptom entry:", error);
+    throw new Error("Failed to update symptom entry.");
   }
 };
 
