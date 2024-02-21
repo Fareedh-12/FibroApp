@@ -101,6 +101,7 @@ const AppGraph = ({
           y={(datum) => (datum.severity !== null ? datum.severity : 0)}
           style={{ data: { stroke: "#c43a31" } }}
           animate={{ duration: 2000, onLoad: { duration: 1000 } }}
+          interpolation="monotoneX"
         />
 
         <VictoryScatter
@@ -119,6 +120,7 @@ const AppGraph = ({
             y={(datum) => (datum.severity !== null ? datum.severity : 0)}
             style={{ data: { stroke: "#30a3e6" } }} // Different color for community data
             animate={{ duration: 2000, onLoad: { duration: 1000 } }}
+            interpolation="monotoneX"
           />
         )}
         {showCommunityData && (
