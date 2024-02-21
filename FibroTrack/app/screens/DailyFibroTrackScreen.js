@@ -72,15 +72,17 @@ const DailyFibroTrackScreen = () => {
         <View style={styles.modalBackdrop}>
           <View style={styles.modalView}>
             <ScrollView>
-              {symptoms.map((symptom, index) => (
-                <AppCheckBox
-                  key={symptom.id || index} // Preferably use symptom.id if available
-                  text={symptom.name}
-                  value={symptom.name}
-                  onValueChange={() => handleCheckboxToggle(index)}
-                  isChecked={symptom.visible}
-                />
-              ))}
+              <NativeBaseProvider>
+                {symptoms.map((symptom, index) => (
+                  <AppCheckBox
+                    key={symptom.id || index} // Preferably use symptom.id if available
+                    text={symptom.name}
+                    value={symptom.name}
+                    onValueChange={() => handleCheckboxToggle(index)}
+                    isChecked={symptom.visible}
+                  />
+                ))}
+              </NativeBaseProvider>
             </ScrollView>
 
             <AppButton text="Done" onPress={toggleModal} />

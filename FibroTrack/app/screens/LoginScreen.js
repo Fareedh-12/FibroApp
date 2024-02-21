@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext, useState } from "react";
 import * as Yup from "yup";
 
@@ -15,17 +15,17 @@ import colors from "../config/colors";
 import { signIn } from "../api/auth";
 import AuthContext from "../auth/context";
 
-validationSchema = Yup.object().shape({
+signInValidationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
   password: Yup.string().required().min(5).label("Password"),
 });
 
 const LoginScreen = () => {
   const authContext = useContext(AuthContext);
-
   const [loginFailed, setLoginFailed] = useState(false);
 
-  const handleSubmit = async (loginInfo) => {
+  const handleSubmit = async (loginInfo, { resetForm }) => {
+    console.log("logging in...");
     const { email, password } = loginInfo;
     const result = await signIn({ email, password });
     if (!result.ok) {
@@ -33,6 +33,7 @@ const LoginScreen = () => {
       console.error(result.error);
       return;
     }
+    resetForm();
 
     setLoginFailed(false);
     authContext.setUser(result.data);
@@ -40,14 +41,15 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <AppHeading size={35}>FibroTrack</AppHeading>
       <View style={{ marginTop: 30 }}>
         <AppHeading size={20}>Login into your account</AppHeading>
       </View>
 
       <AppForm
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: "test@gmail.com", password: "123456" }}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}
+        validationSchema={signInValidationSchema}
       >
         <View style={styles.loginForm}>
           <ErrorMessage
@@ -73,9 +75,12 @@ const LoginScreen = () => {
             textContentType="password"
           />
 
-          <View style={styles.optionsContainer}>
+          <TouchableOpacity
+            style={styles.optionsContainer}
+            onPress={() => console.log("changing password coming soon")}
+          >
             <Text style={styles.forgotPassword}>Forgot Password?</Text>
-          </View>
+          </TouchableOpacity>
         </View>
 
         <AppSubmitButton title="Sign In" />
