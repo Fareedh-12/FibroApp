@@ -14,6 +14,8 @@ import {
 import colors from "../config/colors";
 import { signIn } from "../api/auth";
 import AuthContext from "../auth/context";
+import FeatureComingSoon from "../components/FeatureComingSoon";
+import featureComingSoon from "../components/FeatureComingSoon";
 
 signInValidationSchema = Yup.object().shape({
   email: Yup.string().required().email().label("Email"),
@@ -77,7 +79,7 @@ const LoginScreen = () => {
 
           <TouchableOpacity
             style={styles.optionsContainer}
-            onPress={() => console.log("changing password coming soon")}
+            onPress={() => featureComingSoon("Forgot Password")}
           >
             <Text style={styles.forgotPassword}>Forgot Password?</Text>
           </TouchableOpacity>
@@ -90,8 +92,18 @@ const LoginScreen = () => {
         <Text style={{ color: colors.dark }}>Or Login with</Text>
       </View>
       <View style={styles.loginOptions}>
-        <AppButton text="Google" width={155} borderColor={colors.light} />
-        <AppButton text="Apple" width={155} borderColor={colors.light} />
+        <AppButton
+          text="Google"
+          width={155}
+          borderColor={colors.light}
+          onPress={() => featureComingSoon("Google Login")}
+        />
+        <AppButton
+          text="Apple"
+          width={155}
+          borderColor={colors.light}
+          onPress={() => featureComingSoon("Apple Login")}
+        />
       </View>
     </View>
   );

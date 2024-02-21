@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { useContext } from "react";
 import * as Yup from "yup";
 
@@ -6,6 +6,7 @@ import { signUp } from "../api/auth";
 import AppHeading from "../components/AppHeading";
 import { AppForm, AppFormField, AppSubmitButton } from "../components/forms";
 import AuthContext from "../auth/context";
+import FeatureComingSoon from "../components/FeatureComingSoon";
 
 validationSchema = Yup.object().shape({
   username: Yup.string().required().min(3).label("Username"),
@@ -34,11 +35,13 @@ const SignUpScreen = ({ navigation }) => {
       // Handle signup errors (e.g., show an error message)
     }
   };
+  const navigateToLogin = () => {
+    navigation.replace("Login");
+  };
 
   return (
     <View style={styles.container}>
       <AppHeading size={35}>FibroTrack</AppHeading>
-
       <View style={{ marginTop: 30, width: "100%" }}>
         <AppHeading size={25}>Welcome</AppHeading>
         <AppHeading>Get started for free today</AppHeading>
@@ -90,7 +93,9 @@ const SignUpScreen = ({ navigation }) => {
 
         <View style={styles.buttons}>
           <AppSubmitButton title="Sign Up" />
-          <Text>Already have an account? Sign In</Text>
+          <TouchableOpacity onPress={navigateToLogin}>
+            <Text>Already have an account? Sign In</Text>
+          </TouchableOpacity>
         </View>
       </AppForm>
     </View>

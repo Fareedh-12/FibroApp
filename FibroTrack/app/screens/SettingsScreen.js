@@ -10,6 +10,7 @@ import {
 import AppHeader from "../components/AppHeader";
 import AuthContext from "../auth/context";
 import { signOutUser } from "../api/auth";
+import featureComingSoon from "../components/FeatureComingSoon";
 
 // Assuming you have a function to handle sign out
 
@@ -36,21 +37,32 @@ const SettingsScreen = () => {
     <View style={styles.container}>
       <AppHeader />
       <View style={styles.profileContainer}>
-        <Image source={{ uri: userImage }} style={styles.profileImage} />
+        <TouchableOpacity onPress={() => featureComingSoon("Update Profile ")}>
+          <Image source={{ uri: userImage }} style={styles.profileImage} />
+        </TouchableOpacity>
         <Text style={styles.text}>{username}</Text>
         <Text style={styles.text}>{email}</Text>
       </View>
 
       <View style={styles.settingsOptions}>
-        <TouchableOpacity onPress={() => {}} style={styles.option}>
+        <TouchableOpacity
+          onPress={() => featureComingSoon("Notification Preferences")}
+          style={styles.option}
+        >
           <Text style={styles.optionText}>Notification Preferences</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}} style={styles.option}>
+        <TouchableOpacity
+          onPress={() => featureComingSoon("Change Password")}
+          style={styles.option}
+        >
           <Text style={styles.optionText}>Change Password</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => {}} style={styles.option}>
+        <TouchableOpacity
+          onPress={() => featureComingSoon("Privacy settings")}
+          style={styles.option}
+        >
           <Text style={styles.optionText}>Privacy Settings</Text>
         </TouchableOpacity>
 
