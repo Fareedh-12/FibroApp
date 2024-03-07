@@ -15,8 +15,11 @@ const AppGraphs = ({ data }) => {
     "Physical Activity",
     "Sleep",
   ];
-  const startDate = new Date(2024, 1, 1); // February 1, 2024
-  const endDate = new Date(2024, 1, 28); // February 28, 2024
+  const endDate = new Date();
+  const startDate = new Date(endDate);
+  startDate.setMonth(endDate.getMonth() - 1);
+
+  // Now, startDate is one month before the endDate
   const communityData = generateCommunityData(symptoms, startDate, endDate);
 
   useEffect(() => {
